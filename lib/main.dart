@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter_weather_bg/flutter_weather_bg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -60,7 +61,6 @@ class homeScreenState extends State<homeScreen>{
   Widget build(BuildContext context) {
 
     return new Scaffold(
-        backgroundColor: Color.fromRGBO(16, 24, 32, 1),
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onDoubleTap: () {
@@ -73,18 +73,12 @@ class homeScreenState extends State<homeScreen>{
               }
             });
           },
-          child: Row(
-            //change
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-
-              //left half of screen
-              Container(
+          child: Container(
                   child: Stack(
                     children: [
 
                       WeatherBg(
-                        width: MediaQuery.of(context).size.width/2,
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         weatherType: currentWeather,
                       ),
@@ -92,81 +86,263 @@ class homeScreenState extends State<homeScreen>{
 
 
                       Row(
+
                         children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                  child: Container(
-                                    //change: left: 80
-                                    padding: EdgeInsets.only(left: 140,top: 70),
-                                    child: AnalogClock(
-                                      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                                      width: 300.0,
-                                      showTicks: true,
-                                      showNumbers: true,
-                                      showDigitalClock: false,
-                                      datetime: DateTime.now(),
-                                      key: GlobalObjectKey(1),
-                                      isLive:true,
-                                    ),
-                                  )
-                              ),
-
-
-                              Container(
-                                child: ClipRRect(
-                                  borderRadius: new BorderRadius.circular(10.0),
-                                  child: Container(
-                                    width: 200,
-                                    height: 70,
-                                    child: ButtonTheme(
-                                      child: FutureBuilder<Widget>(
-                                          future: fetchTemp(),
-                                          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot){
-                                            if(snapshot.hasData)
-                                              return Center(child: snapshot.data,);
-
-                                            return Container(child: Text('Loading...'));
-                                          }
-                                      ),
-
-                                    ),
-                                    color: Color.fromRGBO(46, 49, 49, 1),
-                                  ),
-                                ),
-                                //change: left:80
-                                padding: EdgeInsets.only(bottom: 80,left: 140),
-                              ),
-
-
-                            ],
-                          ),
-
-
 
                           Container(
-                            height: MediaQuery.of(context).size.height,
-                            //change: 140
-                            width: 220,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.centerRight,
-                                  end: Alignment.centerLeft,
-                                  //change .1,.4
-                                  stops: [0.3,0.6],
-                                  colors: [
-                                    Color.fromRGBO(16, 24, 32, 1),
-                                    Colors.transparent
-                                  ],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                    child: Container(
+                                      child: AnalogClock(
+                                        decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                                        width: 300.0,
+                                        showTicks: true,
+                                        showNumbers: true,
+                                        showDigitalClock: false,
+                                        datetime: DateTime.now(),
+                                        key: GlobalObjectKey(1),
+                                        isLive:true,
+                                      ),
+                                    )
+                                ),
 
-                                )
+
+                                Container(
+                                  padding: EdgeInsets.only(bottom: 80),
+                                  child: ClipRRect(
+                                    borderRadius: new BorderRadius.circular(10.0),
+                                    child: Container(
+                                      width: 200,
+                                      height: 70,
+                                      child: ButtonTheme(
+                                        child: FutureBuilder<Widget>(
+                                            future: fetchTemp(),
+                                            builder: (BuildContext context, AsyncSnapshot<Widget> snapshot){
+                                              if(snapshot.hasData)
+                                                //change: child: snapshot.data
+                                                return Center(child: snapshot.data,);
+
+                                              return Container(child: Text('Loading...'));
+                                            }
+                                        ),
+
+                                      ),
+                                      color: Color.fromRGBO(46, 49, 49, 1),
+                                    ),
+                                  ),
+                                  //change: left:80
+                                ),
+
+
+                              ],
                             ),
+                            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/8, right: MediaQuery.of(context).size.width/10),
                           ),
+
+
+
+
+
+                          //right half of screen
+
+                          Expanded(
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                                      child: Container(
+                                          color: Colors.grey.withOpacity(0.3),
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+
+                                                children: [
+                                                  Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+
+                                                      Container(
+                                                        child: ClipRRect(
+                                                          borderRadius: new BorderRadius.circular(40.0),
+                                                          child: Container(
+                                                            width: 230,
+                                                            height: 230,
+                                                            child: ButtonTheme(
+                                                              child: FlatButton(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+
+                                                                    Center(
+                                                                      child: Hero(
+                                                                        child: Image.asset('images/alarm.png', scale: 1.8,),
+                                                                        tag: 'alarm',
+                                                                      )
+                                                                      ),
+
+                                                                    Text('Alarm', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
+
+                                                                  ],
+                                                                ),
+                                                                onPressed: (){
+
+                                                                  Navigator.push(context,MaterialPageRoute(builder: (context) => alarmState()));
+
+                                                                },
+                                                              ),
+                                                            ),
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                        padding: EdgeInsets.only(right: 20,bottom: 20),
+                                                      ),
+
+
+
+                                                      Container(
+                                                        child: ClipRRect(
+                                                          borderRadius: new BorderRadius.circular(40.0),
+                                                          child: Container(
+                                                            width: 230,
+                                                            height: 230,
+                                                            child: ButtonTheme(
+                                                              child: FlatButton(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+
+                                                                    Center(child: Image.asset('images/musicIcon.png',
+
+                                                                      scale: 1.8,
+                                                                    ),),
+
+                                                                    Text('Music', style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),)
+
+                                                                  ],
+                                                                ),
+                                                                onPressed: (){
+                                                                  Fluttertoast.showToast(
+                                                                      msg: currentWeather.toString(),
+                                                                      toastLength: Toast.LENGTH_SHORT,
+                                                                      gravity: ToastGravity.CENTER,
+                                                                      timeInSecForIosWeb: 1,
+                                                                      backgroundColor: Colors.red,
+                                                                      textColor: Colors.white,
+                                                                      fontSize: 16.0
+                                                                  );
+                                                                },
+                                                              ),
+
+                                                            ),
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                        padding: EdgeInsets.only(right: 20),
+                                                      )
+
+
+                                                    ],
+                                                  ),
+
+
+                                                  Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+
+                                                      Container(
+                                                        child: ClipRRect(
+                                                          borderRadius: new BorderRadius.circular(40.0),
+                                                          child: Container(
+                                                            width: 230,
+                                                            height: 230,
+                                                            child: ButtonTheme(
+                                                              child: FlatButton(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+
+                                                                    Center(
+                                                                        child: Hero(
+                                                                          child: Image.asset('images/rgbIcon.jpg', fit: BoxFit.fitWidth,),
+                                                                          tag: 'lights',
+                                                                        )
+                                                                    ),
+
+                                                                    Text('Lights', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
+
+                                                                  ],
+                                                                ),
+                                                                onPressed: (){
+
+                                                                  Navigator.push(context,MaterialPageRoute(builder: (context) => lightsState()));
+
+                                                                },
+                                                              ),
+                                                            ),
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                        padding: EdgeInsets.only(bottom: 20),
+                                                      ),
+
+
+                                                      Container(
+                                                        child: ClipRRect(
+                                                          borderRadius: new BorderRadius.circular(40.0),
+                                                          child: Container(
+                                                            width: 230,
+                                                            height: 230,
+                                                            child: ButtonTheme(
+                                                              child: FlatButton(
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+
+                                                                    Center(child: Image.asset('images/blindsDown.png',
+                                                                      fit: BoxFit.fitWidth,
+                                                                    ),),
+
+                                                                    Text('Blinds', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
+
+                                                                  ],
+                                                                ),
+                                                                onPressed: (){
+
+                                                                  Navigator.push(context,MaterialPageRoute(builder: (context) => lightsState()));
+
+                                                                },
+                                                              ),
+                                                            ),
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+
+
+                                                    ],
+                                                  ),
+
+
+                                                ],
+
+                                              )
+                                          )
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          )
 
 
                         ],
+
+
                       ),
 
                     ],
@@ -174,185 +350,6 @@ class homeScreenState extends State<homeScreen>{
               ),
 
 
-
-
-
-
-              //right half of screen
-
-              Container(
-
-                  child: Row(
-
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-
-                          Container(
-                            child: ClipRRect(
-                              borderRadius: new BorderRadius.circular(40.0),
-                              child: Container(
-                                width: 230,
-                                height: 230,
-                                child: ButtonTheme(
-                                  child: FlatButton(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-
-                                        Center(child: Image.asset('images/alarm.png',
-
-                                          scale: 1.8,
-                                        ),),
-
-                                        Text('Alarm', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
-
-                                      ],
-                                    ),
-                                    onPressed: (){
-
-                                      Navigator.push(context,MaterialPageRoute(builder: (context) => alarmState()));
-
-                                    },
-                                  ),
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                            padding: EdgeInsets.only(right: 20,bottom: 20),
-                          ),
-
-
-
-                          Container(
-                            child: ClipRRect(
-                              borderRadius: new BorderRadius.circular(40.0),
-                              child: Container(
-                                width: 230,
-                                height: 230,
-                                child: ButtonTheme(
-                                  child: FlatButton(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-
-                                        Center(child: Image.asset('images/musicIcon.png',
-
-                                          scale: 1.8,
-                                        ),),
-
-                                        Text('Music', style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),)
-
-                                      ],
-                                    ),
-                                    onPressed: (){
-                                      Fluttertoast.showToast(
-                                          msg: currentWeather.toString(),
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.CENTER,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0
-                                      );
-                                    },
-                                  ),
-
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                            padding: EdgeInsets.only(right: 20),
-                          )
-
-
-                        ],
-                      ),
-
-
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-
-                          Container(
-                            child: ClipRRect(
-                              borderRadius: new BorderRadius.circular(40.0),
-                              child: Container(
-                                width: 230,
-                                height: 230,
-                                child: ButtonTheme(
-                                  child: FlatButton(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-
-                                        Center(child: Image.asset('images/rgbIcon.jpg',
-                                          fit: BoxFit.fitWidth,
-                                        ),),
-
-                                        Text('Lights', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
-
-                                      ],
-                                    ),
-                                    onPressed: (){
-
-                                      Navigator.push(context,MaterialPageRoute(builder: (context) => lightsState()));
-
-                                    },
-                                  ),
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                            padding: EdgeInsets.only(bottom: 20),
-                          ),
-
-
-                          Container(
-                            child: ClipRRect(
-                              borderRadius: new BorderRadius.circular(40.0),
-                              child: Container(
-                                width: 230,
-                                height: 230,
-                                child: ButtonTheme(
-                                  child: FlatButton(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-
-                                        Center(child: Image.asset('images/blindsDown.png',
-                                          fit: BoxFit.fitWidth,
-                                        ),),
-
-                                        Text('Blinds', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),)
-
-                                      ],
-                                    ),
-                                    onPressed: (){
-
-                                      Navigator.push(context,MaterialPageRoute(builder: (context) => lightsState()));
-
-                                    },
-                                  ),
-                                ),
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-
-
-                        ],
-                      ),
-
-
-                    ],
-
-                  )
-              )
-
-            ],
-          ),
         )
     );
 

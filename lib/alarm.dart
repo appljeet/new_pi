@@ -96,7 +96,10 @@ class alarmScreen extends State<alarmState>{
 
                     Container(
                       padding: EdgeInsets.only(top: 10,left: 300,bottom: 10),
-                      child: Image.asset('images/alarm.png', fit: BoxFit.fitWidth, scale: 6,),
+                      child: Hero(
+                        child: Image.asset('images/alarm.png', fit: BoxFit.fitWidth, scale: 6,),
+                        tag: 'alarm',
+                      )
                     ),
 
                     Container(
@@ -104,29 +107,11 @@ class alarmScreen extends State<alarmState>{
                       child: Text('Alarm',style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold),),
                     ),
 
-                    Container(
-                      padding: EdgeInsets.only(top: 10,left: 300,bottom: 10),
-                      child: LiteRollingSwitch(
-                        //initial value
-                        value: true,
-                        textOn: 'On',
-                        textOff: 'Off',
-                        colorOn: Colors.greenAccent[700],
-                        colorOff: Colors.redAccent[700],
-                        iconOn: Icons.done,
-                        iconOff: Icons.remove_circle_outline,
-                        textSize: 16.0,
-                        onChanged: (bool state) {
-                          //Use it to manage the different states
-                          print(state);
-                        },
-                      ),
-                    ),
+
 
 
                   ],
                 ),
-
 
 
 

@@ -187,7 +187,10 @@ class lightsScreen extends State<lightsState>{
 
                     Container(
                       padding: EdgeInsets.only(top: 10,left: 300,bottom: 10),
-                      child: Image.asset('images/rgbIcon.jpg', fit: BoxFit.fitWidth, scale: 27,),
+                      child: Hero(
+                        child: Image.asset('images/rgbIcon.jpg', fit: BoxFit.fitWidth, scale: 27,),
+                        tag: 'lights',
+                      ),
                     ),
 
                     Container(
